@@ -271,11 +271,11 @@ La distribuzione tra i mining pools sul totale dei blocchi vuoti riscontrati nel
 
 \section{OP\_RETURN protocols}
 \subsection{Contesto}
-OP\_RETURN, di base, è uno degli opcodes del linguaggio Script. Rende la transazione non spendibile, per cui tutto ciò che viene inserito dopo esso non ha rilevanza e questo permette di allegare 40[80] bytes di dati arbitrari. Solitamente viene utilizzato per allegare un messaggio. Tuttavia, poiché la blockchain per ragioni di efficienza e spazio non permette l’inserimento di files allegati e la necessità di avere milioni di copie della blockchain rende impensabile l’implementazione di un servizio simile si sfrutta questo piccolo spazio per allegare in forma compatta un riferimento a dati esterni.
-Tramite l’OP\_RETURN è possibile utilizzare servizi aggiuntivi che si appoggiano alla blockchain ma risiedono su un altro strato (layered network). Servizi di timestamping, firma digitale, archiviazione possono utilizzare la blockchain per includere riferimenti a dati residenti all’esterno di essa e marcare con il loro identificatore i primi 4 bytes dell’OP\_RETURN
+OP\_RETURN, di base, è uno degli opcodes del linguaggio Script. Rende la transazione non spendibile, per cui tutto ciò che viene inserito dopo esso non ha rilevanza e questo permette di allegare fino a 80 bytes di dati arbitrari. Solitamente viene utilizzato per allegare un messaggio. Tuttavia, poiché la blockchain per ragioni di efficienza e spazio non permette l’inserimento di file e la necessità di avere milioni di copie della blockchain rende impensabile l’implementazione di un servizio simile, si sfrutta questo piccolo spazio per un riferimento a dati esterni (ad esempio un hash).
+Tramite l’OP\_RETURN è possibile utilizzare servizi aggiuntivi che si appoggiano alla blockchain ma risiedono su un altro strato (layered network). Servizi di timestamping, firma digitale, archiviazione possono utilizzare la blockchain per includere riferimenti a dati residenti all’esterno di essa e marcare con il loro identificatore i primi bytes dell’OP\_RETURN.
 
-OP\_RETURN è supportato su Litecoin a partire dalla versione 0.9: pur non avendo raggiunto una diffusione comparabile a quella conseguita su Bitcoin è stata comunque riscontrata la presenza di metaprotocolli nella blockchain, tra cui alcuni dei più noti che si appoggiano a Bitcoin stesso.
-Recentemente l’OP\_RETURN è stato utilizzato per inserire un header indicativo dell’adesione a Segwit: quest’ultimo è un protocollo che nasce per ovviare ad un problema di scalabilità che riguarda la blockchain.
+OP\_RETURN è supportato su Litecoin a partire dalla versione 0.9: pur non avendo raggiunto una diffusione comparabile a quella conseguita su Bitcoin è stata comunque riscontrata la presenza di protocolli nella blockchain, tra cui alcuni dei più noti che si appoggiano a Bitcoin stesso.
+Recentemente un numero crescente di transazioni OP\_RETURN contiene un header indicativo del protocollo Segwit: quest’ultimo nasce per ovviare ad un problema di scalabilità che riguarda la blockchain.
 
 \begin{figure}[h!]
 	\centering
@@ -285,7 +285,7 @@ Recentemente l’OP\_RETURN è stato utilizzato per inserire un header indicativ
 \end{figure}
 
 
-Il problema si è posto con la crescita dell’interesse verso l’utilizzo delle Blockchain, in quanto ogni blocco di transazioni deve rispettare il limite massimo di 1MB e questo ha cominciato a causare congestione e ritardi sui network. Talvolta i tempi di attesa sono stati nell’ordine delle ore. Inoltre un rischio notevole per la sicurezza era rappresentato dalla malleabilità, ossia la possibilità che il destinatario intercettasse l’ID della transazione del mittente modificandola a suo favore. Queste ragioni hanno portato alla separazione (da qui Segregated) della firma digitale (Witness): i dati della firma digitale, che fino ad ora occupavano fino al 65\% dello spazio della transazione, sono ora separati e la transazione contiene un puntatore ad essi affinché il software possa trattare indipendentemente le due parti. Al contrario di quel che ci si aspetterebbe, il network Litecoin l'ha implementato 3 mesi prima di quello Bitcoin (10 maggio 2017 contro il 23 agosto 2017)
+Il problema si è posto con la crescita dell’interesse verso l’utilizzo delle Blockchain, in quanto ogni blocco di transazioni deve rispettare il limite massimo di 1MB e questo ha cominciato a causare congestione e ritardi sui network (nonché conflitti che hanno portato a una hard fork su Bitcoin da cui è nato BitcoinCash, con limite massimo di 8 MB). Talvolta i tempi di attesa per la convalida di una transazione sono stati nell’ordine delle ore. Inoltre, un rischio notevole per la sicurezza era rappresentato dalla malleabilità, ossia la possibilità che il destinatario intercettasse l’ID della transazione del mittente modificandola a suo favore. Queste ragioni hanno portato alla separazione (da qui Segregated) della firma digitale (Witness): i dati della firma digitale, che fino ad ora occupavano fino al 65\% dello spazio della transazione, sono ora separati e la transazione contiene un puntatore ad essi affinché il software possa trattare indipendentemente le due parti. Al contrario di quel che ci si aspetterebbe, il network Litecoin l'ha implementato 3 mesi prima di quello Bitcoin (10 maggio 2017 contro il 23 agosto 2017).
 
 
 \begin{figure}[h]
@@ -300,7 +300,7 @@ La condizione necessaria affinché il sistema SegWit funzioni è l’adozione da
 
 
 \subsection{Obiettivo}
-Identificare tramite pattern noti i metaprotocolli utilizzati e l’header di adesione a SegWit.
+Identificare tramite pattern noti i protocolli che hanno generato le transazioni OP\_RETURN e l'utilizzo di SegWit.
 \subsection{Svolgimento}
 Si identificano le transazioni OP\_RETURN della blockchain. BlockAPI contiene una lista di pattern conosciuti utilizzati anche su Bitcoin ai quali ho aggiunto alcuni pattern scoperti tramite ricerca e consultazione dei siti ufficiali dei fornitori dei servizi.
 
@@ -378,7 +378,7 @@ L’header della transazione “aa21a9ed” è un codice non-ascii che segnala l
 
 \subsection{Risultati}
 
-Un primo conto significativo si può effettuare per dividere gli OP\_RETURN utilizzati allo scopo di segnalare SegWit da quelli utilizzati per qualsiasi altro scopo. Come abbiamo detto è possibile utilizzarli per introdurre altri servizi esterni alla blockchain, ma anche per ancorare un messaggio in modo permanente alla blockchain seppur meno diffusamente di quanto accada su Bitcoin, nel quale la funzionalità viene sfruttata da molto più tempo. La tabella \ref{segwityn} ne evidenzia l'utilizzo primario: su un totale di 259035 OP\_RETURNs, il 90.5\% contiene l'header SegWit.
+Un primo calcolo significativo distingue gli OP\_RETURN che utilizzano SegWit da quelli che non lo utilizzano. Come abbiamo detto è possibile utilizzarli per introdurre altri servizi esterni alla blockchain, ma anche per ancorare un messaggio in modo permanente alla blockchain seppur meno diffusamente di quanto accada su Bitcoin, nel quale la funzionalità viene sfruttata da molto più tempo. La tabella \ref{segwityn} ne evidenzia l'utilizzo primario: su un totale di 259035 OP\_RETURN, il 90.5\% contiene l'header SegWit.
 
 \begin{table}
 	\begin{center}
@@ -425,18 +425,18 @@ Un primo conto significativo si può effettuare per dividere gli OP\_RETURN util
 		proofofexistence	& 1 \\ 
 			\hline 
 		\end{tabular}
-		\caption{Metaprotocolli utilizzati nelle transazioni OP\_RETURN non SegWit}
+		\caption{Protocolli utilizzati nelle transazioni OP\_RETURN non SegWit}
 		\label{protocols}
 	\end{center}
 \end{table}
 
-Esaminiamo ora nel dettaglio gli OP\_RETURNs con una funzione diversa dalla segnalazione di SegWit: approssimativamente il 50\% di essi non denota l’utilizzo di un metaprotocollo specifico. Questo numero include OP\_RETURNs che contengono messaggi testuali, stringhe la cui decodifica non corrisponde ad alcun ascii, eventualmente codificati in base-64 o in altro modo, e infine protocolli a noi ancora non noti o di cui non è stato possibile trovare un riscontro affidabile sul web.
+Esaminiamo ora nel dettaglio gli OP\_RETURN che non utilizzano SegWit: approssimativamente il 50\% di essi non denota l’utilizzo di un protocollo specifico. Questo numero include OP\_RETURN che contengono messaggi testuali, stringhe la cui decodifica non corrisponde ad alcun ascii, eventualmente codificati in base-64 o in altro modo, e infine protocolli a noi ancora non noti o di cui non è stato possibile trovare un riscontro affidabile sul web.
 La diffusione dei vari protocolli nel restante 50\% è riportata nella tabella \ref{protocols}.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=1.0\linewidth]{images/distribuzioneopreturn}
-	\caption{Ripartizione dei metaprotocolli negli op\_return della blockchain Litecoin.}
+	\caption{Ripartizione dei protocolli negli op\_return della blockchain Litecoin.}
 	\label{fig:distribuzioneopreturn}
 \end{figure}
 
