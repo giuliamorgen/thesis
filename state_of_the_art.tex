@@ -15,24 +15,4 @@ La connessione avviene tramite l’utilizzo del daemon litecoin in modalità ser
 
 Per supportare la blockchain Litecoin ho aggiunto al tool le strutture dati necessarie: estendendo le interfacce Blockchain e Block e implementando le funzioni che hanno innanzitutto permesso a BlockAPI di effettuare le chiamate RPC, poi di parsare la risposta per ottenere le informazioni necessarie sulla blockchain, sui blocchi e sulle transazioni.
 
-\subsection{Implementazioni}
-Il mio contributo all'estensione di BlockAPI al fine dello svolgimento delle analisi è riassunto esaustivamente nella seguente lista:
-\begin{itemize}
-\item Inclusione libreria LitecoinJ
-\item Moduli necessari all'interazione con Litecoin Core
-\item Estensione strutture dati per gestire Blockchain, Blocco e Transazione Litecoin
-\item Interazione con API Coindesk e Cryptocompare
-\item Rilevazione ID merged mining nella coinbase (estensibile anche a BTC e qualunque criptovaluta BTC-based si implementasse in futuro)
-\item Script e queries per analisi su:
-\begin{itemize}
-\item Bilanci
-\item Blocchi vuoti
-\item Fees
-\item Mining pools e merged mining
-\item OP\_RETURN e SegWit commitment
-\end{itemize}
-\item Lista mining pools, sia correntemente attivi che in passato, di Litecoin e/o Bitcoin
-\item Lista protocolli OP\_RETURN utilizzati da Litecoin e/o Bitcoin
-\end{itemize}
-
 Nel capitolo \ref{sec:analisi} ho inserito le analisi i cui dati erano più significativi ai fini della tesi, escludendo quelle su bilanci e fees.

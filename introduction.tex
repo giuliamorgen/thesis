@@ -1,11 +1,43 @@
 \chapter{Introduzione}
 
 \section{Obiettivi}
-L’obiettivo è lo studio della blockchain di Litecoin per effettuare una comparazione con Bitcoin. A tal fine ho svolto delle analisi riguardanti prevalentemente il lato tecnologico di essa, lo sviluppo, le applicazioni, ma anche il lato economico, tramite dati esterni, come fees, exchange rates e la loro evoluzione nel tempo.
+La tesi studia la blockchain di Litecoin svolgendo delle analisi riguardanti prevalentemente l'attività dei miner e il salvataggio di dati da parte di applicazioni esterne.
+
 \section{Contributi}
-Per l’analisi della blockchain Litecoin ho esteso il tool BlockAPI, implementando le strutture dati e le queries necessarie a tal fine. La parte tecnica dell’estensione del tool verrà discussa nel capitolo 2.
+La tesi offre due principali categorie di contributi: lo sviluppo del tool Blockapi per il supporto di Litecoin e lo svolgimento di analisi sulla blockchain di Litecoin.
+
+I contributi relativi all'estensione di BlockAPI sono:
+\begin{itemize}
+	\item Inclusione della libreria LitecoinJ
+	\item Sviluppo dei moduli necessari all'interazione con Litecoin Core
+	\item Estensione delle strutture dati per gestire Blockchain, Blocco e Transazione Litecoin
+	\item Integrazione con Coindesk e Cryptocompare per recuperare i tassi di scambio tra LTC e USD
+	\item Rilevazione ID merged mining nella coinbase (estensibile anche a BTC e qualunque criptovaluta BTC-based si implementasse in futuro)
+	\item Script e queries per tutte le analisi realizzate
+	\item Lista mining pool, sia correntemente attivi che in passato, di Litecoin e/o Bitcoin
+	\item Lista protocolli OP\_RETURN utilizzati da Litecoin e/o Bitcoin
+\end{itemize}
+
+I contributi relativi alle analisi di Litecoin riguardano lo studio di:
+\begin{itemize}
+	\item Bilanci
+	\item Blocchi vuoti
+	\item Fee
+	\item Mining pool e merged mining
+	\item OP\_RETURN e SegWit commitment
+\end{itemize}
+
+
+
+
+
 \section{Struttura della tesi}
 La tesi presenta un background tecnico iniziale necessario a capire Bitcoin e valido per tutte le criptovalute da esso derivate e mostra le caratteristiche principali per cui Litecoin differisce da Bitcoin. Segue un’introduzione delle tecnologie utilizzate e del mio contributo al tool che è stato utilizzato per l’analisi. Infine le analisi, per ciascuna delle quali viene illustrato un contesto per comprenderla, lo svolgimento di essa, il codice e le queries ed i risultati numerici e loro eventuali rappresentazioni grafiche.
+
+
+
+
+
 
 \section{Background}
 \subsection{Bitcoin}
