@@ -1,0 +1,38 @@
+\chapter{Tecnologie utilizzate}
+
+\section{BlockAPI: Blockchain analytics API}
+BlockAPI è un tool open source in linguaggio Scala che crea un database a partire da una blockchain permettendo di effettuare su di essa analisi tramite query in vari DML. Si appoggia a librerie esterne per ottenere una rappresentazione Java dei dati della blockchain d’interesse e può effettuare richieste Curl tramite API di servizi esterni per accedere a dati non presenti sulla blockchain ma necessari alle analisi: ad esempio per analisi sui bilanci, sulle fees e sui tassi di scambio è utile sapere quanto valeva la criptovaluta analizzata, principalmente in euro o dollari, al momento della transazione e per fare ciò si può ricorrere alle API di Coindesk o Cryptocompare. 
+Il tool supporta Bitcoin ed Ethereum, ai quali ho aggiunto Litecoin.\\
+\section{Database}
+Per effettuare le analisi sulla blockchain Litecoin ho utilizzato il linguaggio SQL e il DBMS MySQL.\\
+\section{Analisi}
+Per effettuare una specifica analisi occorre innanzitutto costruire il DB con i dati d’interesse per essa (es hash del blocco o delle transazioni, input/output scripts, tipo della transazione): per fare ciò esiste per ogni analisi uno script in Scala che automatizza la creazione di una tabella contenente i dati in questione tramite l’ausilio di librerie di terze parti per il parsing dei dati. 
+Tramite i metodi start(block number) e end(block number) è possibile restringere l’analisi a una sezione più o meno estesa della blockchain. Questa possibilità è particolarmente utile quando si analizza una funzionalità implementata con un BIP in un momento preciso oppure se i risultati prima di una determinata data non siano particolarmente significativi. I dati vengono trattati tramite la loro rappresentazione Java fornita dalle librerie precedentemente menzionate, linguaggio con cui Scala si interfaccia agevolmente. Una volta popolate le tabelle tramite l’esecuzione dello script con le informazioni necessarie è possibile effettuare l’analisi vera e propria tramite query eseguibili da command line o GUI sul DBMS scelto. Per tutte le analisi necessarie mi sono avvalsa del client GUI MySQL Workbench.
+
+\section{Connessione con Litecoin}
+Per ottenere una rappresentazione Java della blockchain Litecoin è stato necessario utilizzare nel tool le funzionalità di LitecoinJ \cite{litecoinjgithub}, corrispettivo di BitcoinJ per Bitcoin. La libreria permette operazioni standard come deserializzazione, decodifica, decriptazione indirizzi e key.
+La connessione avviene tramite l’utilizzo del daemon litecoin in modalità server in modo da poter sfruttare le RPC (Remote Procedure Call) per ottenere i dati da passare al tool.
+
+Per supportare la blockchain Litecoin ho aggiunto al tool le strutture dati necessarie: estendendo le interfacce Blockchain e Block e implementando le funzioni che hanno innanzitutto permesso a BlockAPI di effettuare le chiamate RPC, poi di parsare la risposta per ottenere le informazioni necessarie sulla blockchain, sui blocchi e sulle transazioni.
+
+\subsection{Implementazioni}
+Il mio contributo all'estensione di BlockAPI al fine dello svolgimento delle analisi è riassunto esaustivamente nella seguente lista:
+\begin{itemize}
+\item Inclusione libreria LitecoinJ
+\item Moduli necessari all'interazione con Litecoin Core
+\item Estensione strutture dati per gestire Blockchain, Blocco e Transazione Litecoin
+\item Interazione con API Coindesk e Cryptocompare
+\item Rilevazione ID merged mining nella coinbase (estensibile anche a BTC e qualunque criptovaluta BTC-based si implementasse in futuro)
+\item Script e queries per analisi su:
+\begin{itemize}
+\item Bilanci
+\item Blocchi vuoti
+\item Fees
+\item Mining pools e merged mining
+\item OP\_RETURN e SegWit commitment
+\end{itemize}
+\item Lista mining pools, sia correntemente attivi che in passato, di Litecoin e/o Bitcoin
+\item Lista protocolli OP\_RETURN utilizzati da Litecoin e/o Bitcoin
+\end{itemize}
+
+Nel capitolo \ref{sec:analisi} ho inserito le analisi i cui dati erano più significativi ai fini della tesi, escludendo quelle su bilanci e fees.
